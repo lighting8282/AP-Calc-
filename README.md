@@ -1,51 +1,74 @@
 # AP Calc — Archipelago world
 
-The Archipelago world for **AP Calc**, a Unity calculator game: a target number
-appears and you build an equation equal to it from the keys you have. Every
-key is an item.
+The [Archipelago](https://archipelago.gg) multiworld randomizer world for
+**AP Calc**, a calculator puzzle game made in Unity. A target number appears
+and you build an equation that equals it from the keys you have. In
+Archipelago every key is an item: you start with three digits and one
+operator, and the rest of the calculator — up to trig and calculus — comes
+from the multiworld.
 
-The game itself lives in its own repository (github.com/lighting8282/AP-Calc-BACKUP);
-its `APItems.cs` and `APLocations.cs` are the source of truth for item and
-location names and ids. `apcalc/data.py` mirrors them, and `test_data` checks
-the mirror against `apcalc/test/unity_tables.json`, exported from the game with
-`tools/export_unity_tables.cs`.
+> **Status:** the world generates seeds and installs on Archipelago 0.6.7. The
+> game's connection to a server is in progress, so it can't be played in a
+> multiworld yet.
 
-## Contents
+## Install
+
+1. Download `apcalc.apworld` from the [releases](../../releases) page (or build
+   it, below).
+2. Double-click it, or copy it into Archipelago's `custom_worlds` folder.
+3. In the Archipelago Launcher, run **Generate Template Options** and edit
+   `AP Calc.yaml`.
+
+## Options
+
+| Option | Default | |
+|---|---|---|
+| `goal_count` | 50 | equations to solve (20–100) |
+| `equation_checks` | every | `every_other` halves the equation checks |
+| `tier_order` | sequential | logic expects Medium before Hard before AP; `any` drops the chain |
+| `funny_number_chance` | 10 | % chance a target is an unsolved funny number |
+| `trap_chance` | 15 | % of filler replaced by traps |
+
+## Checks (about goal + 44)
+
+- **Equation 1 … N**: every solve up to the goal (or every other one)
+- **First Solve Using …**: the first correct answer using each of the 34 keys
+- **First Hint / Skip / Freebie Used**
+- **Funny Number 67, 69, 420, 666, 777, 1337, 80085**: excluded, filler and traps only
+
+## Items
+
+| | |
+|---|---|
+| Progression | Medium / Hard / AP Difficulty; the 34 keys (`Digit 7`, `Operator +`, `Function sin` …); the first Hint, Skip and Freebie |
+| Useful | Progressive Magnitude ×6, Progressive Decimal ×2, Negative Numbers, Card Pack, Streak Saver, extra Freebies |
+| Filler | 100 / 250 Extra Credit, Pep Talk, Confetti, extra Hints and Skips |
+| Traps | Freeze, Dessert, Invisibility, Clear Equation, Locked Operator |
+
+A key works once both its own item and its tier's item have arrived. Three
+digits and one of `+ - *` are given at the start.
+
+## Development
+
+The game's `APItems.cs` and `APLocations.cs` are the source of truth for names
+and ids. `apcalc/data.py` mirrors them, and `test_data` checks the mirror
+against `apcalc/test/unity_tables.json`, exported from the game by running
+`tools/export_unity_tables.cs` in the Unity editor.
+
+Work from an Archipelago **source** checkout with this folder linked in as
+`worlds/apcalc`, using that checkout's virtual environment:
+
+    SKIP_REQUIREMENTS_UPDATE=1 python -m unittest discover -s worlds/apcalc/test -t . -p "test_*.py"
+    python Generate.py --player_files_path "<this repo>/tests/yaml/multi" --spoiler 2
+    python tools/build_apworld.py          # -> dist/apcalc.apworld
 
 | | |
 |---|---|
 | `apcalc/` | the world: data, options, items, locations, rules, docs, tests |
-| `tools/build_apworld.py` | packages `dist/apcalc.apworld` (reproducible, verified) |
-| `tools/export_unity_tables.cs` | run in the Unity editor to refresh `unity_tables.json` |
-| `tests/yaml/` | solo and 4-player multiworld yamls for real generations |
+| `tools/build_apworld.py` | packages a reproducible, verified `dist/apcalc.apworld` |
+| `tools/export_unity_tables.cs` | refreshes `unity_tables.json` from the game |
+| `tests/yaml/` | solo and 4-player yamls for real generations |
 
-## Checks (about N + 44)
+## License
 
-- **Equation 1 … N** — N is `goal_count` (20–100); `equation_checks: every_other` halves them
-- **First Solve Using <key>** — 34 keys; logic needs the key, its tier, and what it takes to fit it into an answer
-- **First Hint / Skip / Freebie Used**
-- **Funny Number 67, 69, 420, 666, 777, 1337, 80085** — excluded (filler and traps only)
-
-## Items
-
-Tiers (Medium / Hard / AP Difficulty) and 34 keys are progression; three digits
-and one of `+ - *` are precollected as the starting kit. Progressive Magnitude
-×6, Progressive Decimal ×2 and Negative Numbers are useful. Hint / Skip /
-Freebie: first copy progression, extras filler (Freebie useful). Card Pack and
-Streak Saver are useful; Extra Credit, Pep Talk and Confetti are filler; five traps.
-
-## Development
-
-The world is junctioned into the Archipelago source checkout:
-`C:\Users\turtl\Archipelago\worlds\apcalc -> A:\Archipelago\Games\AP Calc\apcalc`.
-Use that checkout's `.venv`.
-
-    SKIP_REQUIREMENTS_UPDATE=1 python -m unittest discover -s worlds/apcalc/test -t . -p "test_*.py"
-    python Generate.py --player_files_path "A:\Archipelago\Games\AP Calc\tests\yaml\multi" --spoiler 2
-    python tools/build_apworld.py
-
-## Not done yet
-
-The game's connection to a server (Archipelago.MultiClient.Net in Unity), which
-will read `goal_count`, `equation_every`, `tier_order` and
-`funny_number_chance` from slot data.
+[MIT](LICENSE)
