@@ -1,0 +1,8 @@
+﻿name: Calc1
+game: AP Calc
+AP Calc:
+  goal_count: 50
+  equation_checks: every
+  tier_order: sequential
+  funny_number_chance: 10
+  trap_chance: 15

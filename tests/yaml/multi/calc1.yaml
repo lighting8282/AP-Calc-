@@ -1,0 +1,6 @@
+﻿name: Calc1
+game: AP Calc
+AP Calc:
+  goal_count: 30
+  tier_order: sequential
+  trap_chance: 20

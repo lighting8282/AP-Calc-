@@ -1,0 +1,8 @@
+﻿name: Calc2
+game: AP Calc
+AP Calc:
+  goal_count: 20
+  equation_checks: every_other
+  tier_order: any
+  trap_chance: 100
+accessibility: full
