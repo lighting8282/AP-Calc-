@@ -13,8 +13,8 @@ from the multiworld.
 
 ## Install
 
-1. Download `apcalc.apworld` from the [releases](../../releases) page (or build
-   it, below).
+1. Build `apcalc.apworld` (see Development, below). Releases with a ready-made
+   file will start once the game can connect.
 2. Double-click it, or copy it into Archipelago's `custom_worlds` folder.
 3. In the Archipelago Launcher, run **Generate Template Options** and edit
    `AP Calc.yaml`.
