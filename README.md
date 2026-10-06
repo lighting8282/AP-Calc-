@@ -7,17 +7,21 @@ Archipelago every key is an item: you start with three digits and one
 operator, and the rest of the calculator — up to trig and calculus — comes
 from the multiworld.
 
-> **Status:** the world generates seeds and installs on Archipelago 0.6.7. The
-> game's connection to a server is in progress, so it can't be played in a
-> multiworld yet.
+> **Status:** the world generates seeds and installs on Archipelago 0.6.7, and
+> the game connects to servers (tested end to end against a live server with
+> another game in the room). No public release of the game yet.
 
 ## Install
 
 1. Build `apcalc.apworld` (see Development, below). Releases with a ready-made
-   file will start once the game can connect.
+   file will start alongside the first public build of the game.
 2. Double-click it, or copy it into Archipelago's `custom_worlds` folder.
 3. In the Archipelago Launcher, run **Generate Template Options** and edit
    `AP Calc.yaml`.
+
+To play, the game's main menu has an **Archipelago** button on the save note:
+enter the server, slot name and password and connect. The full steps are in
+[the setup guide](apcalc/docs/setup_en.md).
 
 ## Options
 

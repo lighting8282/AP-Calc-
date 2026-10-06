@@ -7,12 +7,28 @@
 
 ## Installing the world
 
-1. Download `apcalc.apworld`.
+1. Get `apcalc.apworld`.
 2. Double-click it, or copy it into Archipelago's `custom_worlds` folder.
 3. Open the Archipelago Launcher and choose **Generate Template Options** to
    get `AP Calc.yaml`, then edit it to taste.
 
 ## Joining a multiworld
 
-Connecting the game to a server isn't finished yet. This world generates
-seeds today; the in-game connection is the next piece of work.
+1. Start AP Calc. On the main menu, the note pinned beside the door shows
+   which save you're on. Pick an empty save with **Change save** if you like:
+   once a save joins a multiworld, it belongs to that seed.
+2. Press **Archipelago** on the note.
+3. Enter the server address (for example `archipelago.gg:38281`), your slot
+   name, and the room's password if it has one, then **Connect**.
+4. Close the panel and press **Practice**. Your starting keys are already on
+   the calculator.
+
+Items, hints and the room's chat appear in the message panel (bottom right).
+If the connection drops, the game keeps trying, and anything you solve while
+offline is sent as soon as it's back. Next time you start the game on that
+save it reconnects by itself.
+
+## Playing without a server
+
+Practice, Arcade and the story are the normal game; nothing about
+Archipelago touches them unless the save you're on has joined a multiworld.
