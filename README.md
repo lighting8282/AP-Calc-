@@ -27,13 +27,16 @@ enter the server, slot name and password and connect. The full steps are in
 
 | Option | Default | |
 |---|---|---|
-| `goal_count` | 50 | equations to solve (20–100) |
+| `goal` | equations | `equations`, `cards` (new cards collected in the run) or `both` |
+| `goal_count` | 50 | equations to solve (20–100); also the number of Equation checks |
+| `card_goal_count` | 25 | new cards the cards goal needs (5–100) |
 | `equation_checks` | every | `every_other` halves the equation checks |
 | `tier_order` | sequential | logic expects Medium before Hard before AP; `any` drops the chain |
 | `funny_number_chance` | 10 | % chance a target is an unsolved funny number |
 | `trap_chance` | 15 | % of filler replaced by traps |
 | `shop_slots` | 10 | checks sold in the Archipelago shop (0–25, 0 = no shop) |
 | `shop_price` | 100 | % price; at 100 the whole shop costs about 55 EC per goal equation |
+| `death_link` | false | every 10th wrong answer is a death; one from others costs your streak and a 30 s freeze |
 
 ## Checks (about goal + 54)
 

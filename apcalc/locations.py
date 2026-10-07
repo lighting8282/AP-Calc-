@@ -45,5 +45,7 @@ def create_regions_and_locations(world: APCalcWorld) -> None:
     for n in FUNNY_NUMBERS:
         world.get_location(funny_name(n)).progress_type = LocationProgressType.EXCLUDED
 
-    # The goal: the game reports it when the run's count reaches goal_count.
+    # The goal: the game reports it when the run meets the goal option
+    # (goal_count equations, card_goal_count new cards, or both). Both come
+    # from solving and Extra Credit, so it needs no items.
     calc.add_event("Goal Count Reached", "Victory", location_type=APCalcLocation, item_type=items.APCalcItem)

@@ -101,6 +101,39 @@ class TestMarathon(APCalcTestBase):
     options = {"goal_count": 100, "funny_number_chance": 50, "trap_chance": 0}
 
 
+class TestDefaultSlotData(APCalcTestBase):
+    def test_goal_and_death_link_defaults(self) -> None:
+        data = self.world.fill_slot_data()
+        self.assertEqual(data["goal"], 0)               # equations
+        self.assertEqual(data["card_goal_count"], 25)
+        self.assertEqual(data["death_link"], 0)
+
+
+class TestCardGoal(APCalcTestBase):
+    options = {"goal": "cards", "card_goal_count": 40, "death_link": True}
+
+    def test_slot_data(self) -> None:
+        data = self.world.fill_slot_data()
+        self.assertEqual(data["goal"], 1)
+        self.assertEqual(data["card_goal_count"], 40)
+        self.assertEqual(data["death_link"], 1)
+
+    def test_victory_needs_nothing(self) -> None:
+        # Cards come from Extra Credit, which solving earns.
+        self.assertBeatable(True)
+
+
+class TestBothGoal(APCalcTestBase):
+    options = {"goal": "both", "goal_count": 20, "card_goal_count": 5}
+
+    def test_slot_data(self) -> None:
+        data = self.world.fill_slot_data()
+        self.assertEqual((data["goal"], data["goal_count"], data["card_goal_count"]), (2, 20, 5))
+        # Equation checks still follow goal_count.
+        names = {loc.name for loc in self.multiworld.get_locations(self.player)}
+        self.assertIn(equation_name(20), names)
+
+
 class TestNoShop(APCalcTestBase):
     options = {"shop_slots": 0}
 

@@ -44,7 +44,10 @@ class APCalcWorld(World):
         # What the game needs from the seed. The starting kit isn't here: it's
         # precollected, so the server sends it as the first received items.
         return {
+            "goal": int(self.options.goal),
             "goal_count": int(self.options.goal_count),
+            "card_goal_count": int(self.options.card_goal_count),
+            "death_link": int(self.options.death_link),
             "equation_every": int(self.options.equation_checks),
             "tier_order": int(self.options.tier_order),
             "funny_number_chance": int(self.options.funny_number_chance),

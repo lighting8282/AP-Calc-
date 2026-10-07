@@ -41,8 +41,26 @@ in front of you. Other items change the targets themselves:
 
 ## What is the goal?
 
-Solve as many equations as your goal count. Your run carries on afterwards, so
-you can still find any checks you missed.
+The `goal` option picks one:
+
+- **equations** (default): solve as many equations as your goal count.
+- **cards**: collect `card_goal_count` cards that are new to your save during
+  the run. Packs cost Extra Credit in the card shop, the same Extra Credit the
+  Archipelago shop takes, and Card Pack items open one for free.
+- **both**: the equations and the cards.
+
+Your run carries on afterwards, so you can still find any checks you missed.
+
+## Is there DeathLink?
+
+Yes, with `death_link: true`. A run has no health, so every tenth wrong answer
+is a death for everyone linked, and a death from someone else costs your
+streak and freezes the keypad for 30 seconds.
+
+## Can I chat or use commands in the game?
+
+While connected, the message panel has a line for typing: chat goes to the
+room, and server commands such as `!hint Digit 7` work as in the Text Client.
 
 ## What other items are there?
 

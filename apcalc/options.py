@@ -1,17 +1,44 @@
 from dataclasses import dataclass
 
-from Options import Choice, OptionGroup, PerGameCommonOptions, Range
+from Options import Choice, DeathLink, OptionGroup, PerGameCommonOptions, Range
 
 from .data import MAX_EQUATIONS, MAX_SHOP_SLOTS
 
 
+class Goal(Choice):
+    """
+    What finishes your run. It carries on afterwards for any checks still left.
+
+    equations: solve goal_count equations
+    cards:     collect card_goal_count cards new to your save during the run,
+               from packs bought with Extra Credit or Card Pack items
+    both:      both of those
+    """
+    display_name = "Goal"
+    option_equations = 0
+    option_cards = 1
+    option_both = 2
+    default = option_equations
+
+
 class GoalCount(Range):
-    """How many equations you solve to finish. Every solve counts, freebies
-    included, and your run carries on afterwards for any checks still left."""
+    """How many equations the equations goal needs (every solve counts,
+    freebies included), and how many Equation checks there are, whatever the
+    goal."""
     display_name = "Goal Count"
     range_start = 20
     range_end = MAX_EQUATIONS
     default = 50
+
+
+class CardGoalCount(Range):
+    """How many cards the cards goal needs: cards that weren't in your
+    collection before, collected during the run. A Standard Pack holds five
+    and costs 200 Extra Credit, the same Extra Credit the shop takes."""
+    display_name = "Card Goal Count"
+    range_start = 5
+    range_end = 100
+    default = 25
 
 
 class EquationChecks(Choice):
@@ -90,22 +117,34 @@ class ShopPrice(Range):
     default = 100
 
 
+class APCalcDeathLink(DeathLink):
+    """When you die, everyone who enabled death link dies. Of course, the
+    reverse is true too.
+
+    In AP Calc every tenth wrong answer in your run is a death, and a death
+    from someone else costs your streak and freezes the keypad for 30
+    seconds."""
+
+
 @dataclass
 class APCalcOptions(PerGameCommonOptions):
+    goal: Goal
     goal_count: GoalCount
+    card_goal_count: CardGoalCount
     equation_checks: EquationChecks
     tier_order: TierOrder
     funny_number_chance: FunnyNumberChance
     trap_chance: TrapChance
     shop_slots: ShopSlots
     shop_price: ShopPrice
+    death_link: APCalcDeathLink
 
 
 option_groups = [
-    OptionGroup("Goal", [GoalCount, EquationChecks]),
+    OptionGroup("Goal", [Goal, GoalCount, CardGoalCount, EquationChecks]),
     OptionGroup("Keys and Targets", [TierOrder, FunnyNumberChance]),
     OptionGroup("Shop", [ShopSlots, ShopPrice]),
-    OptionGroup("Extras", [TrapChance]),
+    OptionGroup("Extras", [TrapChance, APCalcDeathLink]),
 ]
 
 option_presets = {
