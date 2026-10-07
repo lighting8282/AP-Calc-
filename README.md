@@ -7,14 +7,14 @@ Archipelago every key is an item: you start with three digits and one
 operator, and the rest of the calculator — up to trig and calculus — comes
 from the multiworld.
 
-> **Status:** the world generates seeds and installs on Archipelago 0.6.7, and
-> the game connects to servers (tested end to end against a live server with
-> another game in the room). No public release of the game yet.
+> **Status:** pre-release v0.1.0. The game (Windows), the apworld and a YAML
+> template are on the [releases page](https://github.com/lighting8282/AP-Calc-/releases).
+> Tested with Archipelago 0.6.7, end to end against a live server.
 
 ## Install
 
-1. Build `apcalc.apworld` (see Development, below). Releases with a ready-made
-   file will start alongside the first public build of the game.
+1. Download `apcalc.apworld` from the [latest release](https://github.com/lighting8282/AP-Calc-/releases/latest),
+   or build it yourself (see Development, below).
 2. Double-click it, or copy it into Archipelago's `custom_worlds` folder.
 3. In the Archipelago Launcher, run **Generate Template Options** and edit
    `AP Calc.yaml`.

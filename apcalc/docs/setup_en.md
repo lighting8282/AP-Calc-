@@ -3,14 +3,15 @@
 ## Required software
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) 0.6.7 or later
-- AP Calc for Windows
+- AP Calc for Windows, from the [AP Calc releases page](https://github.com/lighting8282/AP-Calc-/releases):
+  extract the zip and run `AP Calc.exe`
 
 ## Installing the world
 
-1. Get `apcalc.apworld`.
+1. Get `apcalc.apworld` from the same releases page.
 2. Double-click it, or copy it into Archipelago's `custom_worlds` folder.
-3. Open the Archipelago Launcher and choose **Generate Template Options** to
-   get `AP Calc.yaml`, then edit it to taste.
+3. Edit the release's `AP-Calc.yaml` template, or open the Archipelago
+   Launcher and choose **Generate Template Options** to get `AP Calc.yaml`.
 
 ## Joining a multiworld
 
