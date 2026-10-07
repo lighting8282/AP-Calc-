@@ -36,9 +36,13 @@ enter the server, slot name and password and connect. The full steps are in
 | `trap_chance` | 15 | % of filler replaced by traps |
 | `shop_slots` | 10 | checks sold in the Archipelago shop (0–25, 0 = no shop) |
 | `shop_price` | 100 | % price; at 100 the whole shop costs about 55 EC per goal equation |
+| `streak_checks` | true | Streak Of 5, 10 and 25 correct answers in a row |
+| `speed_checks` | true | Solve In Under 10 Seconds, and Under 5 |
+| `variety_checks` | true | Solve Using 6, 8 and 10 Different Keys in one answer |
+| `operator_checks` | true | Solve Without + Or -, and Solve Using + - * And / |
 | `death_link` | false | every 10th wrong answer is a death; one from others costs your streak and a 30 s freeze |
 
-## Checks (about goal + 54)
+## Checks (about goal + 64)
 
 - **Equation 1 … N**: every solve up to the goal (or every other one)
 - **First Solve Using …**: the first correct answer using each of the 34 keys
@@ -46,6 +50,14 @@ enter the server, slot name and password and connect. The full steps are in
 - **Funny Number 67, 69, 420, 666, 777, 1337, 80085**: excluded, filler and traps only
 - **Shop Item 1 … N**: bought in the card shop with Extra Credit earned during the
   run; opening the shop hints each slot's item to its owner
+- **Challenges** (10, each kind its own option): streaks, fast solves, answers
+  using many different keys, and two operator challenges. Streaks and speed need
+  nothing; variety needs `+`, `-` and enough digits to pad with; "without + or -"
+  needs `*` or `/`
+
+Locations are grouped (Equations, First Uses, Funny Numbers, Shop, Streaks, Speed,
+Variety, Operator Challenges), and so are items (Digits, Operators, Functions, Trig,
+Calculus, Medium Keys … 20 groups), so `!hint Digits` works.
 
 ## Items
 
@@ -57,7 +69,8 @@ enter the server, slot name and password and connect. The full steps are in
 | Traps | Freeze, Dessert, Invisibility, Clear Equation, Locked Operator |
 
 A key works once both its own item and its tier's item have arrived. Three
-digits and one of `+ - *` are given at the start.
+digits and one of `+ - *` are given at the start, always ones that can make a
+first target from 1 to 9 (never 5, 7, 9 with only `+`).
 
 ## Development
 

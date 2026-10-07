@@ -58,6 +58,16 @@ NONZERO_DIGITS = DIGITS[1:]
 #: number up to the first magnitude buildable from digits.
 SAFE_OPERATORS = [ITEM_FOR_SYMBOL[op] for op in ("+", "-", "*")]
 
+
+def kit_can_target(digits: list[int], operator: str) -> bool:
+    """Whether the game can show a first target with these keys. It builds
+    targets as "a op b" from the player's digits, and before any Progressive
+    Magnitude only 1 to 9 fit: 5, 7, 9 with just + (or 4, 5, 6 with just *)
+    can't make one, and the run would be stuck at its first target."""
+    def value(a: int, b: int) -> int:
+        return a + b if operator == "+" else a - b if operator == "-" else a * b
+    return any(1 <= value(a, b) <= 9 for a in digits for b in digits)
+
 # ── other items ────────────────────────────────────────────────────────────
 
 MAGNITUDE = "Progressive Magnitude"
@@ -96,6 +106,35 @@ ITEM_NAME_TO_ID: dict[str, int] = {
     PEP_TALK: 400074,
     CONFETTI: 400075,
     **{name: 400080 + i for i, name in enumerate(TRAPS)},
+}
+
+
+def _keys(*symbols: str) -> set[str]:
+    return {ITEM_FOR_SYMBOL[s] for s in symbols}
+
+
+#: Item groups, for !hint, plando and start_inventory ("!hint Digits").
+ITEM_GROUPS: dict[str, set[str]] = {
+    "Keys": set(KEY_ITEMS),
+    "Digits": set(DIGITS),
+    "Operators": {key_item(s, k) for s, k, _ in KEYS if k == "Operator"},
+    "Basic Operators": _keys("+", "-", "*", "/"),
+    "Functions": {key_item(s, k) for s, k, _ in KEYS if k == "Function"},
+    "Trig": _keys("sin(", "cos(", "tan("),
+    "Logarithms": _keys("log(", "log10("),
+    "Variables": _keys("x", "y", "z"),
+    "Derivatives": _keys("d/dx(", "d/dy(", "d/dz("),
+    "Integrals": _keys("∫dx(", "∫dy(", "∫dz("),
+    "Calculus": _keys("d/dx(", "d/dy(", "d/dz(", "∫dx(", "∫dy(", "∫dz("),
+    "Easy Keys": {name for name in KEY_ITEMS if KEY_TIER[name] == EASY},
+    "Medium Keys": {name for name in KEY_ITEMS if KEY_TIER[name] == MEDIUM},
+    "Hard Keys": {name for name in KEY_ITEMS if KEY_TIER[name] == HARD},
+    "AP Keys": {name for name in KEY_ITEMS if KEY_TIER[name] == AP},
+    "Difficulties": set(TIER_ITEMS.values()),
+    "Target Range": {MAGNITUDE, DECIMAL, NEGATIVE},
+    "Power-Ups": set(POWER_UPS),
+    "Extra Credit": {SMALL_CREDIT, BIG_CREDIT},
+    "Traps": set(TRAPS),
 }
 
 # ── locations ──────────────────────────────────────────────────────────────
@@ -146,10 +185,55 @@ def shop_prices(goal_count: int, slots: int, percent: int) -> list[int]:
     return [max(5, int(round(share * k / 5)) * 5) for k in range(1, slots + 1)]
 
 
+# ── challenge checks ── each kind has its own option (options.py).
+
+#: Correct answers in a row.
+STREAKS = [5, 10, 25]
+#: Seconds from a target appearing to solving it.
+SPEED_SECONDS = [10, 5]
+#: Different keys in one answer.
+VARIETY_KEYS = [6, 8, 10]
+NO_PLUS_MINUS = "Solve Without + Or -"
+ALL_FOUR_OPERATORS = "Solve Using + - * And /"
+OPERATOR_CHECKS = [NO_PLUS_MINUS, ALL_FOUR_OPERATORS]
+
+
+def streak_name(n: int) -> str:
+    return f"Streak Of {n}"
+
+
+def speed_name(seconds: int) -> str:
+    return f"Solve In Under {seconds} Seconds"
+
+
+def variety_name(n: int) -> str:
+    return f"Solve Using {n} Different Keys"
+
+
+STREAK_CHECKS = [streak_name(n) for n in STREAKS]
+SPEED_CHECKS = [speed_name(s) for s in SPEED_SECONDS]
+VARIETY_CHECKS = [variety_name(n) for n in VARIETY_KEYS]
+
 LOCATION_NAME_TO_ID: dict[str, int] = {
     **{equation_name(n): 200000 + n for n in range(1, MAX_EQUATIONS + 1)},
     **{first_use_name(item): 300000 + i for i, item in enumerate(KEY_ITEMS)},
     **{power_up_name(p): 300100 + i for i, p in enumerate(POWER_UPS)},
     **{funny_name(n): 300200 + i for i, n in enumerate(FUNNY_NUMBERS)},
     **{shop_name(k): 300300 + k - 1 for k in range(1, MAX_SHOP_SLOTS + 1)},
+    **{name: 300400 + i for i, name in enumerate(STREAK_CHECKS)},
+    **{name: 300410 + i for i, name in enumerate(SPEED_CHECKS)},
+    **{name: 300420 + i for i, name in enumerate(VARIETY_CHECKS)},
+    **{name: 300430 + i for i, name in enumerate(OPERATOR_CHECKS)},
+}
+
+#: Location groups, for !hint_location, exclude_locations and the like.
+LOCATION_GROUPS: dict[str, set[str]] = {
+    "Equations": {equation_name(n) for n in range(1, MAX_EQUATIONS + 1)},
+    "First Uses": {first_use_name(item) for item in KEY_ITEMS} | {power_up_name(p) for p in POWER_UPS},
+    "Funny Numbers": {funny_name(n) for n in FUNNY_NUMBERS},
+    "Shop": {shop_name(k) for k in range(1, MAX_SHOP_SLOTS + 1)},
+    "Streaks": set(STREAK_CHECKS),
+    "Speed": set(SPEED_CHECKS),
+    "Variety": set(VARIETY_CHECKS),
+    "Operator Challenges": set(OPERATOR_CHECKS),
 }

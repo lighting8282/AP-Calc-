@@ -13,6 +13,10 @@ rest — the other digits, `+ - * /`, brackets, powers, square roots, trig,
 logarithms, variables and calculus — arrive from the multiworld. A key also
 needs its difficulty tier (Medium, Hard or AP Difficulty) before it works.
 
+When a key becomes usable, a note by the calculator says what it does, with an
+example such as `sqrt(81) = 9`, and a button to the cheat sheet page that
+covers it.
+
 Targets are always built from keys you have, so you can always solve the one
 in front of you. Other items change the targets themselves:
 
@@ -38,6 +42,19 @@ in front of you. Other items change the targets themselves:
   `shop_slots` option sets how many (default 10, 0 for none) and `shop_price`
   scales the prices: at 100% the whole shop costs about 55 Extra Credit per
   equation of your goal.
+- **Challenges**, each kind with its own option, all on by default:
+  - `streak_checks`: **Streak Of 5, 10 and 25** correct answers in a row.
+  - `speed_checks`: **Solve In Under 10 Seconds**, and **Under 5**, from the
+    target appearing. Any target counts, so you can wait for an easy one.
+  - `variety_checks`: **Solve Using 6, 8 and 10 Different Keys** in one
+    answer. Padding counts: `+7-7` adds two keys.
+  - `operator_checks`: **Solve Without + Or -**, and **Solve Using + - * And /**
+    in one answer.
+
+  Freebies don't count for these, though they keep a streak going.
+
+Locations are grouped (Equations, First Uses, Funny Numbers, Shop, Streaks,
+Speed, Variety, Operator Challenges) for options like `exclude_locations`.
 
 ## What is the goal?
 
@@ -62,6 +79,12 @@ streak and freezes the keypad for 30 seconds.
 While connected, the message panel has a line for typing: chat goes to the
 room, and server commands such as `!hint Digit 7` work as in the Text Client.
 
+Items come in groups too, so `!hint Digits` hints every digit at once. The
+groups: Keys, Digits, Operators, Basic Operators, Functions, Trig, Logarithms,
+Variables, Derivatives, Integrals, Calculus, Easy Keys, Medium Keys, Hard Keys,
+AP Keys, Difficulties, Target Range, Power-Ups, Extra Credit and Traps. They
+work in `start_inventory` and plando as well.
+
 ## What other items are there?
 
 - **Hint, Skip, Freebie**: the first of each unlocks that power-up; every copy
@@ -70,3 +93,9 @@ room, and server commands such as `!hint Digit 7` work as in the Text Client.
   wrong answer keeps your streak), **Extra Credit**, **Pep Talk**, **Confetti**.
 - Traps: **Freeze**, **Dessert** (every key becomes a pastry), **Invisibility**,
   **Clear Equation** and **Locked Operator**.
+
+## Accessibility
+
+Settings > Accessibility has a larger text size, two readable fonts (Atkinson
+Hyperlegible and OpenDyslexic), blue and orange in place of green and red for
+right and wrong, and reduced motion. They apply to every save.

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Choice, DeathLink, OptionGroup, PerGameCommonOptions, Range
+from Options import Choice, DeathLink, DefaultOnToggle, OptionGroup, PerGameCommonOptions, Range
 
 from .data import MAX_EQUATIONS, MAX_SHOP_SLOTS
 
@@ -117,6 +117,32 @@ class ShopPrice(Range):
     default = 100
 
 
+class StreakChecks(DefaultOnToggle):
+    """Checks for 5, 10 and 25 correct answers in a row. A wrong answer starts
+    the count again; a freebie keeps it going without adding to it, and a
+    Streak Saver item takes one wrong answer for you."""
+    display_name = "Streak Checks"
+
+
+class SpeedChecks(DefaultOnToggle):
+    """Checks for solving a target within 10 seconds of it appearing, and
+    within 5. Any target counts, so you can wait for an easy one; freebies
+    don't."""
+    display_name = "Speed Checks"
+
+
+class VarietyChecks(DefaultOnToggle):
+    """Checks for one answer using 6, 8 and 10 different keys. Logic expects
+    + and - and enough digits to pad an answer with things like +7-7."""
+    display_name = "Variety Checks"
+
+
+class OperatorChecks(DefaultOnToggle):
+    """Two checks: an answer with no + or - in it (logic expects * or /), and
+    one using all four of + - * and /."""
+    display_name = "Operator Checks"
+
+
 class APCalcDeathLink(DeathLink):
     """When you die, everyone who enabled death link dies. Of course, the
     reverse is true too.
@@ -137,6 +163,10 @@ class APCalcOptions(PerGameCommonOptions):
     trap_chance: TrapChance
     shop_slots: ShopSlots
     shop_price: ShopPrice
+    streak_checks: StreakChecks
+    speed_checks: SpeedChecks
+    variety_checks: VarietyChecks
+    operator_checks: OperatorChecks
     death_link: APCalcDeathLink
 
 
@@ -144,6 +174,7 @@ option_groups = [
     OptionGroup("Goal", [Goal, GoalCount, CardGoalCount, EquationChecks]),
     OptionGroup("Keys and Targets", [TierOrder, FunnyNumberChance]),
     OptionGroup("Shop", [ShopSlots, ShopPrice]),
+    OptionGroup("Challenge Checks", [StreakChecks, SpeedChecks, VarietyChecks, OperatorChecks]),
     OptionGroup("Extras", [TrapChance, APCalcDeathLink]),
 ]
 

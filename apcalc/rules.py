@@ -20,6 +20,11 @@ to do it:
   e              pad an algebra answer with +e-e
   d/dx( ∫dx( …   their own variable, with + and * (d/dx(x*x), ∫dx(x+x))
 
+The challenge checks: streaks and fast solves need nothing, since any target
+will do. Variety pads an answer with +d-d for each digit in hand; "no + or -"
+needs * or /, since some targets are built with one of those alone; all four
+operators pads with +d-d*d/d.
+
 These are deliberately conservative: logic may expect a little more than the
 game strictly needs, never less.
 """
@@ -28,11 +33,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from rule_builder.rules import Has, HasAll, HasAny, Rule
+from rule_builder.rules import Has, HasAll, HasAny, HasFromList, Rule
 
 from .data import (
-    AP, AP_TIER, EASY, FUNNY_NUMBERS, HARD, HARD_TIER, ITEM_FOR_SYMBOL, KEY_ITEMS, KEY_TIER, MEDIUM, MEDIUM_TIER,
-    POWER_UPS, first_use_name, funny_name, power_up_name,
+    ALL_FOUR_OPERATORS, AP, AP_TIER, DIGITS, EASY, FUNNY_NUMBERS, HARD, HARD_TIER, ITEM_FOR_SYMBOL, KEY_ITEMS, KEY_TIER,
+    MEDIUM, MEDIUM_TIER, NO_PLUS_MINUS, POWER_UPS, VARIETY_CHECKS, VARIETY_KEYS, first_use_name, funny_name,
+    power_up_name,
 )
 from .options import TierOrder
 
@@ -91,6 +97,12 @@ def first_use_rule(world: APCalcWorld, symbol: str) -> Rule:
     return rule
 
 
+def variety_rule(n: int) -> Rule:
+    """n different keys in one answer: any answer padded with +d-d for every
+    digit in hand, so + and - and n - 2 digits."""
+    return HasAll(key("+"), key("-")) & HasFromList(*DIGITS, count=n - 2)
+
+
 def funny_rule(n: int) -> Rule:
     """Reachable once n can be written as (n - d) + d with d its last digit
     and n - d ending in 0: its digits, a 0, and +. Only reachability: these
@@ -110,6 +122,14 @@ def set_all_rules(world: APCalcWorld) -> None:
     for n in FUNNY_NUMBERS:
         world.set_rule(world.get_location(funny_name(n)), funny_rule(n))
 
+    if world.options.variety_checks:
+        for n, name in zip(VARIETY_KEYS, VARIETY_CHECKS):
+            world.set_rule(world.get_location(name), variety_rule(n))
+    if world.options.operator_checks:
+        world.set_rule(world.get_location(NO_PLUS_MINUS), _any("*", "/"))
+        world.set_rule(world.get_location(ALL_FOUR_OPERATORS), HasAll(key("+"), key("-"), key("*"), key("/")))
+
     # Solving N equations needs nothing the starting kit doesn't give, and
-    # neither do the shop slots: their Extra Credit comes from those solves.
+    # neither do the shop slots (their Extra Credit comes from those solves),
+    # streaks or fast solves: any target will do for those.
     world.set_completion_rule(Has("Victory"))

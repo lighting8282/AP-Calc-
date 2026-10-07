@@ -5,7 +5,7 @@ from worlds.AutoWorld import World
 
 from . import items, locations, rules, web_world
 from . import options as apcalc_options
-from .data import GAME_NAME, ITEM_NAME_TO_ID, LOCATION_NAME_TO_ID, shop_prices
+from .data import GAME_NAME, ITEM_GROUPS, ITEM_NAME_TO_ID, LOCATION_GROUPS, LOCATION_NAME_TO_ID, shop_prices
 
 
 class APCalcWorld(World):
@@ -24,6 +24,8 @@ class APCalcWorld(World):
 
     item_name_to_id = ITEM_NAME_TO_ID
     location_name_to_id = LOCATION_NAME_TO_ID
+    item_name_groups = ITEM_GROUPS
+    location_name_groups = LOCATION_GROUPS
 
     def create_regions(self) -> None:
         locations.create_regions_and_locations(self)
@@ -55,4 +57,9 @@ class APCalcWorld(World):
             # number of slots.
             "shop_prices": shop_prices(int(self.options.goal_count), int(self.options.shop_slots),
                                        int(self.options.shop_price)),
+            # Which challenge checks exist, so the game only tracks those.
+            "streak_checks": int(self.options.streak_checks),
+            "speed_checks": int(self.options.speed_checks),
+            "variety_checks": int(self.options.variety_checks),
+            "operator_checks": int(self.options.operator_checks),
         }

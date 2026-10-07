@@ -6,8 +6,8 @@ from BaseClasses import Location, LocationProgressType, Region
 
 from . import items
 from .data import (
-    FUNNY_NUMBERS, GAME_NAME, KEY_ITEMS, LOCATION_NAME_TO_ID, POWER_UPS, equation_name, first_use_name, funny_name,
-    power_up_name, shop_name,
+    FUNNY_NUMBERS, GAME_NAME, KEY_ITEMS, LOCATION_NAME_TO_ID, OPERATOR_CHECKS, POWER_UPS, SPEED_CHECKS, STREAK_CHECKS,
+    VARIETY_CHECKS, equation_name, first_use_name, funny_name, power_up_name, shop_name,
 )
 
 if TYPE_CHECKING:
@@ -24,6 +24,20 @@ def equation_numbers(world: APCalcWorld) -> list[int]:
     return [n for n in range(step, int(world.options.goal_count) + 1, step)]
 
 
+def challenge_checks(world: APCalcWorld) -> list[str]:
+    """The streak, speed, variety and operator checks the options turn on."""
+    names: list[str] = []
+    if world.options.streak_checks:
+        names += STREAK_CHECKS
+    if world.options.speed_checks:
+        names += SPEED_CHECKS
+    if world.options.variety_checks:
+        names += VARIETY_CHECKS
+    if world.options.operator_checks:
+        names += OPERATOR_CHECKS
+    return names
+
+
 def create_regions_and_locations(world: APCalcWorld) -> None:
     # One room: everything happens at the calculator. Rules sit on the
     # locations themselves (rules.py).
@@ -38,6 +52,7 @@ def create_regions_and_locations(world: APCalcWorld) -> None:
     # Bought with Extra Credit, which every solve earns: always reachable,
     # just paid for, so they take any item.
     names += [shop_name(k) for k in range(1, int(world.options.shop_slots) + 1)]
+    names += challenge_checks(world)
     calc.add_locations({n: LOCATION_NAME_TO_ID[n] for n in names}, APCalcLocation)
 
     # Funny numbers turn up by chance, so they may only hold filler or traps.

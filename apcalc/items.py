@@ -8,7 +8,7 @@ from Options import OptionError
 from .data import (
     BIG_CREDIT, CARD_PACK, CONFETTI, DECIMAL, DECIMAL_COPIES, FREEBIE, FUNNY_NUMBERS, GAME_NAME, HINT,
     ITEM_NAME_TO_ID, KEY_ITEMS, MAGNITUDE, MAGNITUDE_COPIES, NEGATIVE, NONZERO_DIGITS, DIGITS, PEP_TALK,
-    POWER_UPS, SAFE_OPERATORS, SKIP, SMALL_CREDIT, STREAK_SAVER, TIER_ITEMS, TRAPS,
+    POWER_UPS, SAFE_OPERATORS, SKIP, SMALL_CREDIT, STREAK_SAVER, TIER_ITEMS, TRAPS, kit_can_target,
 )
 
 if TYPE_CHECKING:
@@ -74,13 +74,16 @@ def _filler_item(world: APCalcWorld) -> APCalcItem:
 def choose_starting_kit(world: APCalcWorld) -> list[str]:
     """A non-zero digit, two more digits and one of + - *. Without it no
     equation can be built, so nothing could be checked at the start and the
-    seed couldn't generate. The game draws its own the same way when tested
-    without a server (APItems.RandomStartingKit)."""
-    first = world.random.choice(NONZERO_DIGITS)
-    rest = [d for d in DIGITS if d != first]
-    kit = [first] + world.random.sample(rest, 2)
-    kit.append(world.random.choice(SAFE_OPERATORS))
-    return kit
+    seed couldn't generate. Drawn again until the game can build a first
+    target from it (kit_can_target). The game draws its own the same way when
+    tested without a server (APItems.RandomStartingKit)."""
+    while True:
+        first = world.random.choice(NONZERO_DIGITS)
+        rest = [d for d in DIGITS if d != first]
+        kit = [first] + world.random.sample(rest, 2)
+        kit.append(world.random.choice(SAFE_OPERATORS))
+        if kit_can_target([DIGITS.index(d) for d in kit[:3]], kit[3].split(" ", 1)[1]):
+            return kit
 
 
 def create_all_items(world: APCalcWorld) -> None:

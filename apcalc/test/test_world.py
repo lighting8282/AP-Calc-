@@ -1,8 +1,10 @@
 import unittest
 
 from ..data import (
-    AP_TIER, FUNNY_NUMBERS, HARD_TIER, ITEM_FOR_SYMBOL, KEY_ITEMS, MEDIUM_TIER, POWER_UPS, equation_name,
-    first_use_name, funny_name, power_up_name, shop_name, shop_prices,
+    ALL_FOUR_OPERATORS, AP_TIER, DIGITS, FUNNY_NUMBERS, HARD_TIER, ITEM_FOR_SYMBOL, ITEM_GROUPS, ITEM_NAME_TO_ID,
+    KEY_ITEMS, LOCATION_GROUPS, LOCATION_NAME_TO_ID, MEDIUM_TIER, NO_PLUS_MINUS, OPERATOR_CHECKS, POWER_UPS,
+    SPEED_CHECKS, STREAK_CHECKS, VARIETY_CHECKS, VARIETY_KEYS, equation_name, first_use_name, funny_name,
+    kit_can_target, power_up_name, shop_name, shop_prices, variety_name,
 )
 from . import APCalcTestBase
 
@@ -11,14 +13,41 @@ def key(symbol: str) -> str:
     return ITEM_FOR_SYMBOL[symbol]
 
 
+CHALLENGES = STREAK_CHECKS + SPEED_CHECKS + VARIETY_CHECKS + OPERATOR_CHECKS
+
+
 class TestDefault(APCalcTestBase):
     def test_location_count(self) -> None:
         names = {loc.name for loc in self.multiworld.get_locations(self.player) if loc.address is not None}
-        self.assertEqual(len(names), 50 + len(KEY_ITEMS) + len(POWER_UPS) + len(FUNNY_NUMBERS) + 10)
+        self.assertEqual(len(names), 50 + len(KEY_ITEMS) + len(POWER_UPS) + len(FUNNY_NUMBERS) + 10 + len(CHALLENGES))
         self.assertIn(equation_name(50), names)
         self.assertNotIn(equation_name(51), names)
         self.assertIn(shop_name(10), names)
         self.assertNotIn(shop_name(11), names)
+        for name in CHALLENGES:
+            self.assertIn(name, names)
+
+    def test_challenge_slot_data(self) -> None:
+        data = self.world.fill_slot_data()
+        for flag in ("streak_checks", "speed_checks", "variety_checks", "operator_checks"):
+            self.assertEqual(data[flag], 1)
+
+    def test_streaks_and_speed_are_free(self) -> None:
+        for name in STREAK_CHECKS + SPEED_CHECKS:
+            self.assertTrue(self.can_reach_location(name))
+
+    def test_variety_needs_plus_minus_and_digits(self) -> None:
+        # The kit is three digits and one operator: never enough for 10.
+        self.assertFalse(self.can_reach_location(variety_name(10)))
+        self.collect_by_name(DIGITS + [key("+"), key("-")])
+        for n in VARIETY_KEYS:
+            self.assertTrue(self.can_reach_location(variety_name(n)))
+
+    def test_operator_checks(self) -> None:
+        self.collect_by_name([key("/")])
+        self.assertTrue(self.can_reach_location(NO_PLUS_MINUS))
+        self.collect_by_name([key("+"), key("-"), key("*")])
+        self.assertTrue(self.can_reach_location(ALL_FOUR_OPERATORS))
 
     def test_shop_is_free_but_paid(self) -> None:
         # Nothing but Extra Credit, which solving earns: reachable from the start.
@@ -152,6 +181,68 @@ class TestBigShop(APCalcTestBase):
         self.assertEqual(prices, sorted(prices))
         # 100 x 55 x 4 = 22,000, give or take the rounding to 5s.
         self.assertAlmostEqual(sum(prices), 22000, delta=25 * 5)
+
+
+class TestNoChallenges(APCalcTestBase):
+    options = {"streak_checks": False, "speed_checks": False, "variety_checks": False, "operator_checks": False}
+
+    def test_no_challenge_locations(self) -> None:
+        names = {loc.name for loc in self.multiworld.get_locations(self.player)}
+        for name in CHALLENGES:
+            self.assertNotIn(name, names)
+        data = self.world.fill_slot_data()
+        for flag in ("streak_checks", "speed_checks", "variety_checks", "operator_checks"):
+            self.assertEqual(data[flag], 0)
+
+
+class TestOnlyStreaks(APCalcTestBase):
+    options = {"speed_checks": False, "variety_checks": False, "operator_checks": False}
+
+    def test_only_streaks(self) -> None:
+        names = {loc.name for loc in self.multiworld.get_locations(self.player)}
+        self.assertTrue(set(STREAK_CHECKS) <= names)
+        self.assertFalse(set(SPEED_CHECKS + VARIETY_CHECKS + OPERATOR_CHECKS) & names)
+
+
+class TestGroups(unittest.TestCase):
+    def test_item_groups(self) -> None:
+        for group, names in ITEM_GROUPS.items():
+            self.assertNotIn(group, ITEM_NAME_TO_ID, f"group {group} shadows an item")
+            self.assertTrue(names, group)
+            self.assertTrue(names <= set(ITEM_NAME_TO_ID), group)
+        self.assertEqual(ITEM_GROUPS["Digits"], set(DIGITS))
+        self.assertEqual(ITEM_GROUPS["Keys"], set(KEY_ITEMS))
+        self.assertEqual(len(ITEM_GROUPS["Operators"]) + len(ITEM_GROUPS["Functions"]), len(KEY_ITEMS) - 10)
+        self.assertEqual(ITEM_GROUPS["Calculus"], ITEM_GROUPS["Derivatives"] | ITEM_GROUPS["Integrals"])
+
+    def test_location_groups(self) -> None:
+        grouped: set[str] = set()
+        for group, names in LOCATION_GROUPS.items():
+            self.assertNotIn(group, LOCATION_NAME_TO_ID, f"group {group} shadows a location")
+            self.assertTrue(names <= set(LOCATION_NAME_TO_ID), group)
+            grouped |= names
+        self.assertEqual(grouped, set(LOCATION_NAME_TO_ID))   # every location is in a group
+
+
+class TestStartingKit(unittest.TestCase):
+    def test_kit_can_target(self) -> None:
+        self.assertFalse(kit_can_target([5, 7, 9], "+"))   # every sum is over 9
+        self.assertFalse(kit_can_target([4, 5, 6], "*"))
+        self.assertFalse(kit_can_target([0, 5, 7], "*"))   # 0 isn't a target either
+        self.assertTrue(kit_can_target([0, 5, 7], "+"))
+        self.assertTrue(kit_can_target([3, 8, 9], "*"))
+        self.assertTrue(kit_can_target([5, 7, 9], "-"))
+
+    def test_every_kit_has_a_first_target(self) -> None:
+        import random
+        from types import SimpleNamespace
+        from ..items import choose_starting_kit
+        for seed in range(2000):
+            kit = choose_starting_kit(SimpleNamespace(random=random.Random(seed)))
+            digits = [DIGITS.index(d) for d in kit[:3]]
+            self.assertTrue(kit_can_target(digits, kit[3].split(" ", 1)[1]), kit)
+            self.assertEqual(len(set(kit)), 4)
+            self.assertNotEqual(digits[0], 0)
 
 
 class TestShopPricesAlone(unittest.TestCase):
