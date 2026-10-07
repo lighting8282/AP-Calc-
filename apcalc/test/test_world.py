@@ -1,6 +1,8 @@
+import unittest
+
 from ..data import (
     AP_TIER, FUNNY_NUMBERS, HARD_TIER, ITEM_FOR_SYMBOL, KEY_ITEMS, MEDIUM_TIER, POWER_UPS, equation_name,
-    first_use_name, funny_name, power_up_name,
+    first_use_name, funny_name, power_up_name, shop_name, shop_prices,
 )
 from . import APCalcTestBase
 
@@ -12,9 +14,24 @@ def key(symbol: str) -> str:
 class TestDefault(APCalcTestBase):
     def test_location_count(self) -> None:
         names = {loc.name for loc in self.multiworld.get_locations(self.player) if loc.address is not None}
-        self.assertEqual(len(names), 50 + len(KEY_ITEMS) + len(POWER_UPS) + len(FUNNY_NUMBERS))
+        self.assertEqual(len(names), 50 + len(KEY_ITEMS) + len(POWER_UPS) + len(FUNNY_NUMBERS) + 10)
         self.assertIn(equation_name(50), names)
         self.assertNotIn(equation_name(51), names)
+        self.assertIn(shop_name(10), names)
+        self.assertNotIn(shop_name(11), names)
+
+    def test_shop_is_free_but_paid(self) -> None:
+        # Nothing but Extra Credit, which solving earns: reachable from the start.
+        for k in range(1, 11):
+            self.assertTrue(self.can_reach_location(shop_name(k)))
+
+    def test_shop_prices_in_slot_data(self) -> None:
+        prices = self.world.fill_slot_data()["shop_prices"]
+        self.assertEqual(len(prices), 10)
+        self.assertEqual(prices, sorted(prices))
+        self.assertEqual(prices[0], 50)              # one share of 2,750
+        self.assertEqual(sum(prices), 50 * 55)
+        self.assertTrue(all(p % 5 == 0 for p in prices))
 
     def test_starting_kit(self) -> None:
         kit = [item.name for item in self.multiworld.precollected_items[self.player]]
@@ -82,3 +99,32 @@ class TestSmallestPool(APCalcTestBase):
 
 class TestMarathon(APCalcTestBase):
     options = {"goal_count": 100, "funny_number_chance": 50, "trap_chance": 0}
+
+
+class TestNoShop(APCalcTestBase):
+    options = {"shop_slots": 0}
+
+    def test_no_shop_locations(self) -> None:
+        names = {loc.name for loc in self.multiworld.get_locations(self.player)}
+        self.assertNotIn(shop_name(1), names)
+        self.assertEqual(self.world.fill_slot_data()["shop_prices"], [])
+
+
+class TestBigShop(APCalcTestBase):
+    options = {"shop_slots": 25, "shop_price": 400, "goal_count": 100}
+
+    def test_prices(self) -> None:
+        prices = self.world.fill_slot_data()["shop_prices"]
+        self.assertEqual(len(prices), 25)
+        self.assertEqual(prices, sorted(prices))
+        # 100 x 55 x 4 = 22,000, give or take the rounding to 5s.
+        self.assertAlmostEqual(sum(prices), 22000, delta=25 * 5)
+
+
+class TestShopPricesAlone(unittest.TestCase):
+    def test_small_shops_cost_the_same_in_total(self) -> None:
+        for slots in (1, 3, 5, 10, 25):
+            self.assertAlmostEqual(sum(shop_prices(50, slots, 100)), 2750, delta=slots * 5)
+
+    def test_never_free(self) -> None:
+        self.assertTrue(all(p >= 5 for p in shop_prices(20, 25, 25)))

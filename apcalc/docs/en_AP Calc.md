@@ -30,6 +30,14 @@ in front of you. Other items change the targets themselves:
 - **First Hint / Skip / Freebie Used.**
 - **Funny Numbers**: 67, 69, 420, 666, 777, 1337 and 80085 sometimes appear as
   targets once you can build them. These only hold filler or traps.
+- **Shop Item 1 … N**: the Archipelago shop, a note on the card shop's board
+  during a run. Each slot is a check bought with Extra Credit, cheapest first.
+  Only Extra Credit earned during the run counts (solves and Extra Credit
+  items), so a save that already had some can't buy the shop out on day one.
+  Opening the shop shows what each slot holds and hints it to its owner. The
+  `shop_slots` option sets how many (default 10, 0 for none) and `shop_price`
+  scales the prices: at 100% the whole shop costs about 55 Extra Credit per
+  equation of your goal.
 
 ## What is the goal?
 

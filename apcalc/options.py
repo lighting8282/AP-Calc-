@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from Options import Choice, OptionGroup, PerGameCommonOptions, Range
 
-from .data import MAX_EQUATIONS
+from .data import MAX_EQUATIONS, MAX_SHOP_SLOTS
 
 
 class GoalCount(Range):
@@ -69,6 +69,27 @@ class TrapChance(Range):
     default = 15
 
 
+class ShopSlots(Range):
+    """How many checks the Archipelago shop sells. You buy them in the card
+    shop with Extra Credit earned during the run, and opening the shop hints
+    each slot's item to its owner. They can hold anything. 0 turns it off."""
+    display_name = "Shop Slots"
+    range_start = 0
+    range_end = MAX_SHOP_SLOTS
+    default = 10
+
+
+class ShopPrice(Range):
+    """What the shop costs, as a percentage. At 100 the whole shop comes to
+    about 55 Extra Credit per equation of your goal count (2,750 at the
+    default goal of 50), cheapest slot first, so the last one is bought
+    around the goal."""
+    display_name = "Shop Price"
+    range_start = 25
+    range_end = 400
+    default = 100
+
+
 @dataclass
 class APCalcOptions(PerGameCommonOptions):
     goal_count: GoalCount
@@ -76,11 +97,14 @@ class APCalcOptions(PerGameCommonOptions):
     tier_order: TierOrder
     funny_number_chance: FunnyNumberChance
     trap_chance: TrapChance
+    shop_slots: ShopSlots
+    shop_price: ShopPrice
 
 
 option_groups = [
     OptionGroup("Goal", [GoalCount, EquationChecks]),
     OptionGroup("Keys and Targets", [TierOrder, FunnyNumberChance]),
+    OptionGroup("Shop", [ShopSlots, ShopPrice]),
     OptionGroup("Extras", [TrapChance]),
 ]
 

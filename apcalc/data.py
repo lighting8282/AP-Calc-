@@ -123,9 +123,33 @@ def funny_name(n: int) -> str:
     return f"Funny Number {n}"
 
 
+#: The Archipelago shop: checks bought in the card shop with Extra Credit
+#: earned during the run. options.shop_slots of these exist.
+MAX_SHOP_SLOTS = 25
+
+
+def shop_name(k: int) -> str:
+    return f"Shop Item {k}"
+
+
+def shop_prices(goal_count: int, slots: int, percent: int) -> list[int]:
+    """What each shop slot costs, cheapest first, in steps of 5 EC.
+
+    However many slots it's split into, the whole shop comes to about 55 EC
+    per equation of the goal (times percent/100): roughly what a run earns,
+    so the last slot is bought around the goal. The k-th slot costs k shares.
+    """
+    if slots <= 0:
+        return []
+    total = goal_count * 55 * percent / 100
+    share = total / (slots * (slots + 1) / 2)
+    return [max(5, int(round(share * k / 5)) * 5) for k in range(1, slots + 1)]
+
+
 LOCATION_NAME_TO_ID: dict[str, int] = {
     **{equation_name(n): 200000 + n for n in range(1, MAX_EQUATIONS + 1)},
     **{first_use_name(item): 300000 + i for i, item in enumerate(KEY_ITEMS)},
     **{power_up_name(p): 300100 + i for i, p in enumerate(POWER_UPS)},
     **{funny_name(n): 300200 + i for i, n in enumerate(FUNNY_NUMBERS)},
+    **{shop_name(k): 300300 + k - 1 for k in range(1, MAX_SHOP_SLOTS + 1)},
 }

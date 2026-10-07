@@ -5,7 +5,7 @@ from worlds.AutoWorld import World
 
 from . import items, locations, rules, web_world
 from . import options as apcalc_options
-from .data import GAME_NAME, ITEM_NAME_TO_ID, LOCATION_NAME_TO_ID
+from .data import GAME_NAME, ITEM_NAME_TO_ID, LOCATION_NAME_TO_ID, shop_prices
 
 
 class APCalcWorld(World):
@@ -48,4 +48,8 @@ class APCalcWorld(World):
             "equation_every": int(self.options.equation_checks),
             "tier_order": int(self.options.tier_order),
             "funny_number_chance": int(self.options.funny_number_chance),
+            # One price per shop slot, Shop Item 1 first; its length is the
+            # number of slots.
+            "shop_prices": shop_prices(int(self.options.goal_count), int(self.options.shop_slots),
+                                       int(self.options.shop_price)),
         }

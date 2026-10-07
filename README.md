@@ -32,13 +32,17 @@ enter the server, slot name and password and connect. The full steps are in
 | `tier_order` | sequential | logic expects Medium before Hard before AP; `any` drops the chain |
 | `funny_number_chance` | 10 | % chance a target is an unsolved funny number |
 | `trap_chance` | 15 | % of filler replaced by traps |
+| `shop_slots` | 10 | checks sold in the Archipelago shop (0–25, 0 = no shop) |
+| `shop_price` | 100 | % price; at 100 the whole shop costs about 55 EC per goal equation |
 
-## Checks (about goal + 44)
+## Checks (about goal + 54)
 
 - **Equation 1 … N**: every solve up to the goal (or every other one)
 - **First Solve Using …**: the first correct answer using each of the 34 keys
 - **First Hint / Skip / Freebie Used**
 - **Funny Number 67, 69, 420, 666, 777, 1337, 80085**: excluded, filler and traps only
+- **Shop Item 1 … N**: bought in the card shop with Extra Credit earned during the
+  run; opening the shop hints each slot's item to its owner
 
 ## Items
 

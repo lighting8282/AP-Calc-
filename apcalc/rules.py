@@ -110,5 +110,6 @@ def set_all_rules(world: APCalcWorld) -> None:
     for n in FUNNY_NUMBERS:
         world.set_rule(world.get_location(funny_name(n)), funny_rule(n))
 
-    # Solving N equations needs nothing the starting kit doesn't give.
+    # Solving N equations needs nothing the starting kit doesn't give, and
+    # neither do the shop slots: their Extra Credit comes from those solves.
     world.set_completion_rule(Has("Victory"))

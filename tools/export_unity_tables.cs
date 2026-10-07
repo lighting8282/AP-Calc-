@@ -15,11 +15,13 @@ foreach (APLocations.PowerUp p in System.Enum.GetValues(typeof(APLocations.Power
     locs.Append($"    {{\"name\": {Json(APLocations.Name(p))}, \"id\": {APLocations.Id(p)}}},\n");
 foreach (int n in APLocations.FunnyNumbers)
     locs.Append($"    {{\"name\": {Json(APLocations.FunnyName(n))}, \"id\": {APLocations.FunnyId(n)}}},\n");
+for (int k = 1; k <= APLocations.MaxShopSlots; k++)
+    locs.Append($"    {{\"name\": {Json(APLocations.ShopName(k))}, \"id\": {APLocations.ShopId(k)}}},\n");
 string json = "{\n  \"items\": [\n" + items.ToString().TrimEnd(',', '\n') + "\n  ],\n  \"locations\": [\n" +
               locs.ToString().TrimEnd(',', '\n') + "\n  ]\n}\n";
 string path = @"A:\Archipelago\Games\AP Calc\apcalc\test\unity_tables.json";
 System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
 System.IO.File.WriteAllText(path, json, new System.Text.UTF8Encoding(false));
-return $"wrote {APItems.All.Count} items, {APLocations.MaxEquations + APLocations.Keys.Count + 3 + APLocations.FunnyNumbers.Length} locations";
+return $"wrote {APItems.All.Count} items, {APLocations.MaxEquations + APLocations.Keys.Count + 3 + APLocations.FunnyNumbers.Length + APLocations.MaxShopSlots} locations";
 
 string Json(string s) => "\"" + s.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
