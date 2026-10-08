@@ -27,10 +27,10 @@ don't share them.
 
 ### In a browser (no Archipelago)
 
-There's also a browser version on itch.io. Practice, Arcade and the story all
-work, but it can't join a multiworld: the Archipelago library the game uses
-doesn't run in a browser. Its saves are kept by the browser (clearing the
-site's data clears them), separate from the desktop game's.
+A browser version is on the way. Practice, Arcade and the story will all work
+there, but it won't be able to join a multiworld: the Archipelago library the
+game uses doesn't run in a browser. For Archipelago, use the Windows or
+Android version.
 
 ## Installing the world
 
