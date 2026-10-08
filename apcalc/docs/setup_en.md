@@ -14,6 +14,24 @@ When a newer version is out, the main menu says so beside the version number
 in the bottom-left corner, with a link to it. (Settings > Game turns this
 check off.) Update the game and `apcalc.apworld` together.
 
+### On Android
+
+The releases page also has `AP-Calc-<version>-Android.apk`, for phones and
+tablets running Android 7.1 or later on a 64-bit ARM chip (nearly every device
+from the last several years). Open it on the device; Android asks you to allow
+your browser or file manager to **install unknown apps** the first time. It
+plays in landscape, and Archipelago works the same as on Windows.
+
+Saves stay on the device they were made on: the Android and Windows games
+don't share them.
+
+### In a browser (no Archipelago)
+
+There's also a browser version on itch.io. Practice, Arcade and the story all
+work, but it can't join a multiworld: the Archipelago library the game uses
+doesn't run in a browser. Its saves are kept by the browser (clearing the
+site's data clears them), separate from the desktop game's.
+
 ## Installing the world
 
 1. Get `apcalc.apworld` from the same releases page.
@@ -48,6 +66,8 @@ the run before). The log is plain text, so you can open it first and see
 what's in it; it can include your server address and slot name.
 
 The log lives in `%USERPROFILE%\AppData\LocalLow\lighting8282\AP Calc`.
+The browser and Android versions don't keep one you can get at, so their
+issue is filled in the same way, just without a log.
 
 ## Playing without a server
 
