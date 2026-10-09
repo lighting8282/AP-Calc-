@@ -7,7 +7,7 @@ Archipelago every key is an item: you start with three digits and one
 operator, and the rest of the calculator — up to trig and calculus — comes
 from the multiworld.
 
-> **Status:** pre-release v0.3.0. The game (Windows and Android), the apworld
+> **Status:** pre-release v0.4.0. The game (Windows and Android), the apworld
 > and a YAML template are on the [releases page](https://github.com/lighting8282/AP-Calc-/releases).
 > Tested with Archipelago 0.6.7, end to end against a live server.
 
